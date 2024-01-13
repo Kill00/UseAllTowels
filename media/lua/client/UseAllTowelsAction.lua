@@ -7,7 +7,7 @@ function useAllTowelsAction:isValid()
 end
 
 function useAllTowelsAction:start()
-        self.nowWetness = self.character:getBodyDamage():getWetness()
+    self.nowWetness = self.character:getBodyDamage():getWetness()
     self.targetWetness = self.nowWetness * 0.6
 end
 
