@@ -7,12 +7,14 @@ function useAllTowelsAction:isValid()
 end
 
 function useAllTowelsAction:start()
-    if self.character:getBodyDamage():getWetness() == 0 then
-        ISBaseTimedAction.stop(self)
-    end
-
-    self.nowWetness = self.character:getBodyDamage():getWetness()
+        self.nowWetness = self.character:getBodyDamage():getWetness()
     self.targetWetness = self.nowWetness * 0.6
+end
+
+function useAllTowelsAction:update()
+    if (self.character:getBodyDamage():getWetness() == 0) then
+        self:forceComplete()
+    end
 end
 
 function useAllTowelsAction:stop()
@@ -21,9 +23,9 @@ end
 
 function useAllTowelsAction:perform()
     local wetness = self.character:getBodyDamage():getWetness()
-    if self.isBathTowel or self.isDishCloth then
-        if self.nowWetness > 0 then
-            if wetness > self.targetWetness then
+    if (self.isBathTowel or self.isDishCloth) then
+        if (self.nowWetness > 0) then
+            if (wetness > self.targetWetness) then
                 self.character:getBodyDamage():decreaseBodyWetness(self.nowWetness - self.targetWetness)
                 self.item:setUsedDelta(0)
                 self.item:Use()
@@ -49,15 +51,15 @@ function useAllTowelsAction:new(character, item)
     o.nowWetness = 0
     o.targetWetness = 0
 
-    if item:getType() == "BathTowel" then
+    if (item:getType() == "BathTowel") then
         o.isBathTowel = true
-    elseif item:getType() == "DishCloth" then
+    elseif (item:getType() == "DishCloth") then
         o.isDishCloth = true
     else
         o.maxTime = 1
     end
 
-    if o.character:isTimedActionInstant() then
+    if (o.character:isTimedActionInstant()) then
         o.maxTime = 1
     end
 
