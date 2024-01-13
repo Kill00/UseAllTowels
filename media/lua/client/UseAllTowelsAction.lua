@@ -23,6 +23,7 @@ function useAllTowelsAction:update() -- 배속 하면 이상해짐
 
     if (self.character:getBodyDamage():getWetness() == 0 or self.item:getUsedDelta() == 0) then
         self.finished = false
+        self.item:Use()
         self:forceComplete()
     end
 
@@ -36,10 +37,10 @@ function useAllTowelsAction:update() -- 배속 하면 이상해짐
 
     if (canDo) then
         local nowItemWetness = self.item:getUsedDelta()
-        if (nowItemWetness >= 0.1) then
+        if (nowItemWetness >= self.decreaseRate) then
             self.remainWetness = self.remainWetness - (self.nowWetness - self.targetWetness) * 0.1
             self.character:getBodyDamage():decreaseBodyWetness((self.nowWetness - self.targetWetness) * 0.1)
-            self.item:setUsedDelta(nowItemWetness - 0.1)
+            self.item:setUsedDelta(nowItemWetness - self.decreaseRate)
             self.finished = true
         else
             self.finished = true
@@ -57,13 +58,15 @@ function useAllTowelsAction:perform() -- Update 보완
         if (self.isBathTowel or self.isDishCloth) then
             if (self.nowWetness > 0) then
                 self.character:getBodyDamage():decreaseBodyWetness(self.remainWetness)
-                self.item:setUsedDelta(0)
+                self.item:setUsedDelta(self.itemWetness - self.decreaseRate * 10)
             end
         end
-    end
 
-    if (self.item:getUsedDelta() == 0) then
-        self.item:Use()
+        if (self.item:getUsedDelta() == 0) then
+            self.item:Use()
+        else
+            ISTimedActionQueue.addAfter(self, useAllTowelsAction:new(self.character, self.item))
+        end
     end
 
     ISBaseTimedAction.perform(self)
@@ -84,6 +87,9 @@ function useAllTowelsAction:new(character, item)
     o.nowWetness = 0
     o.targetWetness = 0
     o.remainWetness = 0
+
+    o.itemWetness = o.item:getUsedDelta()
+    o.decreaseRate = o.item:getUseDelta()
 
     o.finished = false
     o.count = 0
