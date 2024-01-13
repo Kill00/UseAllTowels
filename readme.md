@@ -1,8 +1,5 @@
 # UseAllTowels
 
-> [!WARNING]
-> To display the 'Dry self (All)' context menu, you need to have at least two towels, and their dropdowns must be expanded.
-
 > ### Supported Item
 > - Bath Towel
 > - Dish Towel
