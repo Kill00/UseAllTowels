@@ -6,29 +6,33 @@ function useAllTowelsRestoreAction:isValid()
     return true
 end
 
+function useAllTowelsRestoreAction:start()
+    if (self.items[1]:getContainer() ~= self.wasContainer) then
+        self:forceComplete()
+    end
+end
+
 function useAllTowelsRestoreAction:perform()
     local wet = 0
-    if (self.items[1]:getContainer() ~= self.wasContainer) then
-        for _, item in ipairs(self.items) do
-            if (item:getUsedDelta() == 0) then
-                wet = wet + 1
-            end
+    for _, item in ipairs(self.items) do
+        if (item:getUsedDelta() == 0) then
+            wet = wet + 1
         end
+    end
 
-        local rawWetTowels = self.character:getInventory():getAllType(self.items[1]:getReplaceOnDeplete())
-        local wetTowels = {}
+    local rawWetTowels = self.character:getInventory():getAllType(self.items[1]:getReplaceOnDeplete())
+    local wetTowels = {}
 
-        for i = 1, rawWetTowels:size() do
-            table.insert(wetTowels, i, rawWetTowels:get(i - 1))
-        end
+    for i = 1, rawWetTowels:size() do
+        table.insert(wetTowels, i, rawWetTowels:get(i - 1))
+    end
 
 
-        for i, item in ipairs(self.items) do
-            if (i <= wet) then
-                ISTimedActionQueue.add(ISInventoryTransferAction:new(self.character, wetTowels[i], wetTowels[i]:getContainer(), self.wasContainer))
-            else
-                ISTimedActionQueue.add(ISInventoryTransferAction:new(self.character, item, item:getContainer(), self.wasContainer))
-            end
+    for i, item in ipairs(self.items) do
+        if (i <= wet) then
+            ISTimedActionQueue.add(ISInventoryTransferAction:new(self.character, wetTowels[i], wetTowels[i]:getContainer(), self.wasContainer))
+        else
+            ISTimedActionQueue.add(ISInventoryTransferAction:new(self.character, item, item:getContainer(), self.wasContainer))
         end
     end
 
