@@ -31,7 +31,7 @@ function useAllTowelsMenu.contextMenu(player, context, items)
             if (useAllTowelsAction.canUse(item)) then
                 if (#items == 1 and stackItemsCount > 1) then
                     context:addOption(getText("ContextMenu_DrySelfAll"), player, useAllTowelsMenu.onUseTowel, stackItems)
-                else
+                elseif (#items > 1) then
                     context:addOption(getText("ContextMenu_DrySelfAll"), player, useAllTowelsMenu.onUseTowel, items)
                 end
                 break
@@ -44,7 +44,7 @@ function useAllTowelsMenu.onUseTowel(player, items)
     local character = getSpecificPlayer(player)
     local wasContainer
 
-    for i, item in ipairs(items) do
+    for _, item in ipairs(items) do
         wasContainer = item:getContainer()
         if (useAllTowelsAction.canUse(item)) then
             if (luautils.haveToBeTransfered(character, item)) then
@@ -53,7 +53,7 @@ function useAllTowelsMenu.onUseTowel(player, items)
         end
     end
 
-    for i, item in ipairs(items) do
+    for _, item in ipairs(items) do
         if (useAllTowelsAction.canUse(item)) then
             ISTimedActionQueue.add(useAllTowelsAction:new(character, item))
         end
