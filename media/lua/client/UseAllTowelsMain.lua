@@ -24,7 +24,6 @@ function useAllTowelsMenu.contextMenu(player, context, items)
             local stackItemsCount = item:getContainer():getItemCount(item:getType())
             local rawStackItems = item:getContainer():getAllType(item:getType())
 
-            -- 데이터 가공
             for i = 1, rawStackItems:size() do
                 table.insert(stackItems, i, rawStackItems:get(i - 1))
             end
@@ -45,7 +44,6 @@ function useAllTowelsMenu.onUseTowel(player, items)
     local character = getSpecificPlayer(player)
     local wasContainer
 
-    -- 수건이 캐릭터 메인 인벤토리에 없을경우 수건을 메인 인벤토리로 옮김
     for _, item in ipairs(items) do
         wasContainer = item:getContainer()
         if (useAllTowelsAction.canUse(item)) then
@@ -55,17 +53,13 @@ function useAllTowelsMenu.onUseTowel(player, items)
         end
     end
 
-    -- 수건 사용
     for _, item in ipairs(items) do
         if (useAllTowelsAction.canUse(item)) then
             ISTimedActionQueue.add(useAllTowelsAction:new(character, item))
         end
     end
 
-    -- 컨테이너가 캐릭터 인벤토리에 있을때만 다시 이전 보관함에 넣어줌
-    if (wasContainer:isInCharacterInventory(character)) then
-        ISTimedActionQueue.add(useAllTowelsRestoreAction:new(character, items, wasContainer))
-    end
+    ISTimedActionQueue.add(useAllTowelsRestoreAction:new(character, items, wasContainer))
 end
 
 Events.OnFillInventoryObjectContextMenu.Add(useAllTowelsMenu.contextMenu)
