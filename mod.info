@@ -1,5 +1,10 @@
 name=Use All Towels
 poster=poster.png
+icon=icon.png
 id=UseAllTowels
-description=You can use all your towels for one click.
+description=Using all towels with just one click.
+modversion=0.0.4
+versionMin=41.78
+authors=Kill00(Steam: IDK)
 url=https://github.com/TeamUselessPlugin/UseAllTowels
+tags=QOL, Utils
