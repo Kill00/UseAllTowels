@@ -16,7 +16,7 @@ function useAllTowelsMenu.contextMenu(player, context, items)
         for _, v in ipairs(items) do
             if (not instanceof(v, "InventoryItem") and #items == 1 and #v.items > 2 and useAllTowelsAction.canUse(v.items[1])) then -- 선택한 아이템의 타입이 한 개 이면서 모두 선택한 경우
                 context:addOption(getText("ContextMenu_DrySelfAll"), player, useAllTowelsMenu.onUseTowel, v.items)
-            elseif (instanceof(v, "InventoryItem") and useAllTowelsAction.canUse(v)) then -- 선택한 아이템의 타입이 한 개 이면서 특정 개수만 선택한 경우
+            elseif (instanceof(v, "InventoryItem") and #items > 1 and useAllTowelsAction.canUse(v)) then -- 선택한 아이템의 타입이 한 개 이면서 특정 개수만 선택한 경우
                 context:addOption(getText("ContextMenu_DrySelfAll"), player, useAllTowelsMenu.onUseTowel, items)
             end
 
